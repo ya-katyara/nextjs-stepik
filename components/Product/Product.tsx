@@ -80,10 +80,10 @@ const Product = ({ product, className }: ProductProps): JSX.Element => {
         })}>
             {
                 product.reviews.map(r => (
-                    <>
-                        <Review key={r._id} review={r} />
+                    <React.Fragment key={r._id}>
+                        <Review review={r} />
                         <Divider />
-                    </>
+                    </React.Fragment>
                 ))
             }
             <ReviewForm productId={product._id} />

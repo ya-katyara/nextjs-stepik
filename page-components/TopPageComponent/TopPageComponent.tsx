@@ -7,11 +7,15 @@ import { TopLevelCategory } from "../../interfaces/page.interface";
 import Advantage from "../../components/Advantage/Advantage";
 import { SortEnum } from "../../components/Sort/Sort.props";
 import Sort from "../../components/Sort/Sort";
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { sortReducer } from "./sort.reducer";
 import Product from "../../components/Product/Product";
 
 const TopPageComponent = ({ page, products, firstCategory }: TopPageComponentProps):JSX.Element => {
+    useEffect(() => {
+      dispatchSort({type: 'updateProducts', products});
+    }, [products]);
+    
     const [{products: sortedProducts, sort}, dispatchSort] = useReducer(sortReducer, {products, sort: SortEnum.Rating});
 
     const setSort = (sort: SortEnum): void => {
