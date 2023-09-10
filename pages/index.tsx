@@ -10,6 +10,7 @@ import axios from "axios";
 import { MenuItem } from "../interfaces/menu.interface";
 import Input from "../components/Input/Input";
 import Textarea from "../components/Textarea/Textarea";
+import { API } from "../helpers/api";
 
 function Home({ menu }: HomeProps): JSX.Element {
     const [counter, setCounter] = useState<number>(0);
@@ -53,7 +54,7 @@ export default withLayout(Home);
 
 export const getStaticProps: GetStaticProps<HomeProps> = async () => {
     const firstCategory = 0;
-    const { data: menu } = await axios.post<MenuItem[]>(process.env.NEXT_PUBLIC_DOMAIN + '/api/top-page/find', {
+    const { data: menu } = await axios.post<MenuItem[]>(API.topPage.find, {
         firstCategory: 0
     });
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import styles from "./Product.module.css";
 import { ProductProps } from "./Product.props";
 import cn from "classnames";
@@ -12,12 +12,21 @@ import Image from "next/image";
 import Review from "../Review/Review";
 import ReviewForm from "../ReviewForm/ReviewForm";
 
-const Product = ({ product, className }: ProductProps): JSX.Element => {
+const Product = ({ product, className, ...props }: ProductProps): JSX.Element => {
     const [isReviewOpened, setIsReviewOpened] = useState<boolean>(false);
+    const reviewRef = useRef<HTMLDivElement>(null);
+
+    const scrollToReview = (): void => {
+        setIsReviewOpened(true);
+        reviewRef.current?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    };
     
     return (
-        <>
-        <Card className={cn(className, styles.product)}>
+    <div className={className} {...props}>
+        <Card className={styles.product}>
             <div className={styles.logo}>
                 <Image 
                     src={process.env.NEXT_PUBLIC_DOMAIN + product.image} 
@@ -38,7 +47,7 @@ const Product = ({ product, className }: ProductProps): JSX.Element => {
             <div className={styles.tags}>{product.categories.map(c =><Tag key={c} className={styles.category} color='ghost'>{c}</Tag>)}</div>
             <div className={styles.priceTitle}>цена</div>
             <div className={styles.creditTitle}>кредит</div>
-            <div className={styles.rateTitle}>{product.reviewCount} {declOfNum(product.reviewCount, ['отзыв', 'отзыва', 'отзывов'])}</div>
+            <div className={styles.rateTitle}><a href="#ref" onClick={scrollToReview}>{product.reviewCount} {declOfNum(product.reviewCount, ['отзыв', 'отзыва', 'отзывов'])}</a></div>
             <Divider className={styles.hr} />
             <div className={styles.description}>{product.description}</div>
             <div className={styles.feature}>
@@ -74,7 +83,7 @@ const Product = ({ product, className }: ProductProps): JSX.Element => {
             </div>
             
         </Card>
-        <Card color="blue" className={cn(styles.reviews, {
+        <Card color="blue" ref={reviewRef} className={cn(styles.reviews, {
             [styles.opened]: isReviewOpened,
             [styles.closed]: !isReviewOpened,
         })}>
@@ -88,7 +97,7 @@ const Product = ({ product, className }: ProductProps): JSX.Element => {
             }
             <ReviewForm productId={product._id} />
         </Card>
-        </>
+    </div>
     );
 };
 
