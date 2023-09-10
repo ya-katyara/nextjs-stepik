@@ -8,6 +8,8 @@ const Rating = forwardRef(({
     isEditable = false,
     rating,
     setRating,
+    error,
+    className,
     ...props
 }: RatingProps, ref: ForwardedRef<HTMLDivElement>): JSX.Element => {
     const [ratingArray, setRatingArray] = useState<JSX.Element[]>(
@@ -65,10 +67,11 @@ const Rating = forwardRef(({
     };
 
     return (
-        <div {...props} ref={ref}>
+        <div {...props} className={cn(className, styles.ratingWrapper)} ref={ref}>
             {ratingArray.map((r, i) => (
                 <span key={i}>{r}</span>
             ))}
+            {error && <span className={styles.errorMessage}>{error.message}</span>}
         </div>
     );
 });
