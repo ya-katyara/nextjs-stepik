@@ -1,0 +1,39 @@
+.button {
+	display: inline-block;
+	box-sizing: border-box;
+	padding: 10px;
+	transition: all 0.2s;
+	border: none;
+	border-radius: 5px;
+	font-size: 14px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.primary {
+	background-color: var(--primary);
+}
+
+.primary svg * {
+	fill: var(--white);
+}
+
+.primary:hover {
+	background-color: var(--primary-hover);
+}
+
+.white {
+	background-color: var(--white);
+}
+
+.white svg * {
+	fill: var(--primary);
+}
+
+.white:hover {
+	background-color: var(--primary);
+}
+
+.white:hover svg * {
+	fill: var(--white);
+}

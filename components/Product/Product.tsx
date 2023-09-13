@@ -31,6 +31,7 @@ const Product = motion(forwardRef(({ product, className, ...props }: ProductProp
             height: 'auto',
         },
         closed: {
+            overflow: 'hidden',
             opacity: 0,
             height: 0
         }
