@@ -24,6 +24,17 @@ const Product = motion(forwardRef(({ product, className, ...props }: ProductProp
             block: 'start'
         });
     };
+
+    const variants = {
+        opened: {
+            opacity: 1,
+            height: 'auto',
+        },
+        closed: {
+            opacity: 0,
+            height: 0
+        }
+    };
     
     return (
     <div className={className} {...props} ref={ref}>
@@ -84,20 +95,23 @@ const Product = motion(forwardRef(({ product, className, ...props }: ProductProp
             </div>
             
         </Card>
-        <Card color="blue" ref={reviewRef} className={cn(styles.reviews, {
-            [styles.opened]: isReviewOpened,
-            [styles.closed]: !isReviewOpened,
-        })}>
-            {
-                product.reviews.map(r => (
-                    <React.Fragment key={r._id}>
-                        <Review review={r} />
-                        <Divider />
-                    </React.Fragment>
-                ))
-            }
-            <ReviewForm productId={product._id} />
-        </Card>
+        <motion.div
+            initial={isReviewOpened ? 'opened' : 'closed'}
+            animate={isReviewOpened ? 'opened' : 'closed'}
+            variants={variants}
+        >
+            <Card color="blue" ref={reviewRef} className={styles.reviews}>
+                {
+                    product.reviews.map(r => (
+                        <React.Fragment key={r._id}>
+                            <Review review={r} />
+                            <Divider />
+                        </React.Fragment>
+                    ))
+                }
+                <ReviewForm productId={product._id} />
+            </Card>
+        </motion.div>
     </div>
     );
 }));
