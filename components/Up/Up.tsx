@@ -16,7 +16,7 @@ const Up = (): JSX.Element => {
     };
 
 	useEffect(() => {
-		controls.start({opacity: y / document.body.scrollHeight});
+		controls.start({opacity: (y + window.visualViewport.height) / document.body.scrollHeight});
 	}, [y, controls]);
 
     return (
