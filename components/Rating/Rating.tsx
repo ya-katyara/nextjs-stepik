@@ -76,8 +76,8 @@ const Rating = forwardRef(({
         if (!isEditable || !setRating) {
             return;
         }
-        e.preventDefault();
         if (e.code == 'ArrowRight' || e.code == 'ArrowUp') {
+            e.preventDefault();
             if (!rating) {
                 setRating(1);
             } else {
@@ -86,6 +86,7 @@ const Rating = forwardRef(({
             ratingArrayRef.current[rating]?.focus();
         }
         if (e.code == 'ArrowLeft' || e.code == 'ArrowDown') {
+            e.preventDefault();
             setRating(rating > 1 ? rating - 1 : 1);
             ratingArrayRef.current[rating - 2]?.focus();
         }
