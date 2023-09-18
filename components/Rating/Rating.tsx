@@ -1,4 +1,4 @@
-import React, { useEffect, useState, KeyboardEvent, forwardRef, ForwardedRef } from "react";
+import React, { useEffect, useState, KeyboardEvent, forwardRef, ForwardedRef, useRef } from "react";
 import styles from "./Rating.module.css";
 import { RatingProps } from "./Rating.props";
 import StarIcon from "./star.svg";
@@ -10,18 +10,33 @@ const Rating = forwardRef(({
     setRating,
     error,
     className,
+    tabIndex,
     ...props
 }: RatingProps, ref: ForwardedRef<HTMLDivElement>): JSX.Element => {
     const [ratingArray, setRatingArray] = useState<JSX.Element[]>(
         new Array(5).fill(<></>)
     );
+    const ratingArrayRef = useRef<(HTMLSpanElement | null)[]>([]);
 
     useEffect(() => {
         constructRating(rating);
-    }, [rating]);
+    }, [rating, tabIndex]);
+
+    const computeFocus = (i: number): number => {
+        if (!isEditable) {
+            return -1;
+        }
+        if (!rating && i == 0) {
+            return tabIndex ?? 0;
+        }
+        if (rating == i + 1) {
+            return tabIndex ?? 0;
+        }
+        return -1;
+    };
 
     const constructRating = (currentRating: number): void => {
-        const updatedArray = ratingArray.map((r: JSX.Element, i: number) => {
+        const updatedArray = ratingArray.map((_, i: number) => {
             return (
                 <span
                     key={i}
@@ -32,13 +47,11 @@ const Rating = forwardRef(({
                     onMouseEnter={(): void => changeDisplay(i + 1)}
                     onMouseLeave={(): void => changeDisplay(rating)}
                     onClick={(): void => onClick(i + 1)}
+                    tabIndex={computeFocus(i)}
+                    onKeyDown={handleKey}
+                    ref={(r): number | undefined => ratingArrayRef.current?.push(r)}
                 >
-                    <StarIcon
-                        tabIndex={isEditable ? 0 : -1}
-                        onKeyDown={(
-                            e: KeyboardEvent<SVGElement>
-                        ): false | void => isEditable && handleSpace(i + 1, e)}
-                    />
+                    <StarIcon/>
                 </span>
             );
         });
@@ -59,11 +72,23 @@ const Rating = forwardRef(({
         setRating(i);
     };
 
-    const handleSpace = (i: number, e: KeyboardEvent<SVGElement>): void => {
-        if (e.code != "Space" || !setRating) {
+    const handleKey = (e: KeyboardEvent): void => {
+        if (!isEditable || !setRating) {
             return;
         }
-        setRating(i);
+        e.preventDefault();
+        if (e.code == 'ArrowRight' || e.code == 'ArrowUp') {
+            if (!rating) {
+                setRating(1);
+            } else {
+                setRating(rating < 5 ? rating + 1 : 5);
+            }
+            ratingArrayRef.current[rating]?.focus();
+        }
+        if (e.code == 'ArrowLeft' || e.code == 'ArrowDown') {
+            setRating(rating > 1 ? rating - 1 : 1);
+            ratingArrayRef.current[rating - 2]?.focus();
+        }
     };
 
     return (
@@ -71,7 +96,7 @@ const Rating = forwardRef(({
             [styles.error]: error
         })} ref={ref}>
             {ratingArray.map((r, i) => (
-                <span key={i}>{r}</span>
+                <React.Fragment key={i}>{r}</React.Fragment>
             ))}
             {error && <span className={styles.errorMessage}>{error.message}</span>}
         </div>

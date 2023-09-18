@@ -23,6 +23,7 @@ const Product = motion(forwardRef(({ product, className, ...props }: ProductProp
             behavior: 'smooth',
             block: 'start'
         });
+        reviewRef.current?.focus();
     };
 
     const variants = {
@@ -101,7 +102,7 @@ const Product = motion(forwardRef(({ product, className, ...props }: ProductProp
             animate={isReviewOpened ? 'opened' : 'closed'}
             variants={variants}
         >
-            <Card color="blue" ref={reviewRef} className={styles.reviews}>
+            <Card color="blue" ref={reviewRef} tabIndex={isReviewOpened ? 0 : -1} className={styles.reviews}>
                 {
                     product.reviews.map(r => (
                         <React.Fragment key={r._id}>
@@ -110,7 +111,7 @@ const Product = motion(forwardRef(({ product, className, ...props }: ProductProp
                         </React.Fragment>
                     ))
                 }
-                <ReviewForm productId={product._id} />
+                <ReviewForm isOpened={isReviewOpened} productId={product._id} />
             </Card>
         </motion.div>
     </div>

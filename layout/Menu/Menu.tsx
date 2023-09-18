@@ -37,15 +37,15 @@ export const Menu = (): JSX.Element => {
     const variantsChildren = {
         visible: {
             opacity: 1,
-            height: 29
+            maxHeight: 50
         },
         hidden: {
             opacity: 0,
-            height: 0
+            maxHeight: 0
         }
     };
 
-    const openSecondLevelKey = (key: KeyboardEvent, secondCategory: string) => {
+    const openSecondLevelKey = (key: KeyboardEvent, secondCategory: string): void => {
         if (key.code == 'Space' || key.code == 'Enter') {
             key.preventDefault();
             openSecondLevel(secondCategory);
@@ -63,6 +63,7 @@ export const Menu = (): JSX.Element => {
                                         [styles.firstLevelActive]:
                                             menu.id == firstCategory,
                                     })}
+                                    tabIndex={0}
                                 >
                                     {menu.icon}
                                     <span>{menu.name}</span>
