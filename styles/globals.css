@@ -27,6 +27,13 @@ a {
 	}
 } */
 
+.visuallyHidden {
+	width: 0;
+	height: 0;
+	overflow: hidden;
+	position: absolute;
+}
+
 :root {
 	--bg-main-color: #F5F6F8;
 	--black: #3B434E;
