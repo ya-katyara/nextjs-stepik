@@ -52,10 +52,14 @@ const Product = motion(forwardRef(({ product, className, ...props }: ProductProp
             <div className={styles.title}>{product.title}</div>
             <div className={styles.price}>
                 <span><span className="visuallyHidden">цена</span>{priceRu(product.price)}</span>
-                {product.oldPrice && <Tag className={styles.oldPrice} color="green">{priceRu(product.price - product.oldPrice)}</Tag>}
+                {product.oldPrice && 
+                    <Tag className={styles.oldPrice} color="green">
+                        <span className="visuallyHidden">скидка</span>
+                        {priceRu(product.price - product.oldPrice)}
+                    </Tag>}
             </div>
             <div className={styles.credit}>
-                <span><span className="visuallyHidden">цена</span>{priceRu(product.credit)}<span className={styles.month}>/мес</span></span>
+                <span><span className="visuallyHidden">кредит</span>{priceRu(product.credit)}<span className={styles.month}>/мес</span></span>
             </div>
             <div className={styles.rating}>
                 <span className="visuallyHidden">рейтинг {product.reviewAvg ?? product.initialRating}</span>
@@ -94,6 +98,7 @@ const Product = motion(forwardRef(({ product, className, ...props }: ProductProp
                     arrow={isReviewOpened ? 'down' : 'right'} 
                     className={styles.reviewButton}
                     onClick={():void => setIsReviewOpened(!isReviewOpened)}
+                    aria-expanded={isReviewOpened}
                 >
                         Читать отзывы
                 </Button>
