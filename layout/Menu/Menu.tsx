@@ -1,20 +1,23 @@
 import styles from "./Menu.module.css";
 import cn from "classnames";
-import { useContext, KeyboardEvent } from "react";
+import { useContext, KeyboardEvent, useState } from "react";
 import { AppContext } from "../../context/app.context";
 import { FirstLevelMenuItem, PageItem } from "../../interfaces/menu.interface";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { firstLevelMenu } from "../../helpers/helpers";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 export const Menu = (): JSX.Element => {
     const { menu, setMenu, firstCategory } = useContext(AppContext);
+    const [announce, setAnnounce] = useState<'closed' | 'opened' | undefined>();
+    const shouldReduceMotion = useReducedMotion();
     const router = useRouter();
 
     const openSecondLevel = (secondCategory: string): void => {
         setMenu && setMenu(menu.map(m => {
             if (m._id.secondCategory == secondCategory) {
+                setAnnounce(m.isOpened ? 'closed' : 'opened');
                 m.isOpened = !m.isOpened;
             }
             return m;
@@ -24,7 +27,7 @@ export const Menu = (): JSX.Element => {
     const variants = {
         visible: {
             marginBottom: 20,
-            transition: {
+            transition: shouldReduceMotion ? {} : {
                 // when: 'beforeChildren'
                 staggerChildren: 0.05
             },
@@ -40,7 +43,7 @@ export const Menu = (): JSX.Element => {
             maxHeight: 50
         },
         hidden: {
-            opacity: 0,
+            opacity: shouldReduceMotion ? 1 : 0,
             maxHeight: 0
         }
     };
@@ -54,9 +57,9 @@ export const Menu = (): JSX.Element => {
 
     const buildFirstLevel = (): JSX.Element => {
         return (
-            <>
+            <ul className={styles.firstLevelList}>
                 {firstLevelMenu.map((menu) => (
-                    <div key={menu.route}>
+                    <li key={menu.route} aria-expanded={menu.id == firstCategory}>
                         <Link href={`/${menu.route}`}>
                                 <div
                                     className={cn(styles.firstLevel, {
@@ -70,63 +73,70 @@ export const Menu = (): JSX.Element => {
                                 </div>
                         </Link>
                         {menu.id == firstCategory && buildSecondLevel(menu)}
-                    </div>
+                    </li>
                 ))}
-            </>
+            </ul>
         );
     };
 
     const buildSecondLevel = (menuItem: FirstLevelMenuItem): JSX.Element => {
         return (
-            <div className={styles.secondBlock}>
+            <ul className={styles.secondBlock}>
                 {menu.map((m) => {
                     if (m.pages.map(p => p.alias).includes(router.asPath.split('/')[2])) {
                         m.isOpened = true;
                     }
                     return (
-                        <div key={m._id.secondCategory}>
-                            <div 
-                                tabIndex={0} 
+                        <li key={m._id.secondCategory}>
+                            <button
                                 className={styles.secondLevel} 
                                 onKeyDown={(key: KeyboardEvent): void => openSecondLevelKey(key, m._id.secondCategory)}
                                 onClick={(): void => openSecondLevel(m._id.secondCategory)}
+                                aria-expanded={m.isOpened}
                             >
                                 {m._id.secondCategory}
-                            </div>
-                            <motion.div 
-                                className={cn(styles.secondLevelBlock)} 
+                            </button>
+                            <motion.ul 
+                                className={styles.secondLevelBlock} 
                                 layout
                                 initial={m.isOpened ? 'visible' : 'hidden'}
                                 animate={m.isOpened ? 'visible' : 'hidden'}
                                 variants={variants}
                             >
                                 {buildThirdLevel(m.pages, menuItem.route, m.isOpened ?? false)}
-                            </motion.div>
-                        </div>
+                            </motion.ul>
+                        </li>
                     );
                 })}
-            </div>
+            </ul>
         );
     };
 
     const buildThirdLevel = (pages: PageItem[], route: string, isOpened: boolean): JSX.Element[] => {
         return (
-            pages.map(page => (
-                <motion.div key={page._id} variants={variantsChildren}>
+            pages.map(page => {
+                const isActive = `/${route}/${page.alias}` == router.asPath;
+                return (
+                <motion.li key={page._id} variants={variantsChildren}>
                     <Link href={`/${route}/${page.alias}`}>
-                        <a tabIndex={isOpened ? 0 : -1} className={cn(styles.thirdLevel, {
-                            [styles.thirdLevelActive]: `/${route}/${page.alias}` == router.asPath,
-                        })}>
+                        <a 
+                            tabIndex={isOpened ? 0 : -1} 
+                            className={cn(styles.thirdLevel, {
+                                [styles.thirdLevelActive]: isActive,
+                            })}
+                            aria-current={isActive ? 'page' : false}
+                        >
                             {page.category}
                         </a>
                     </Link>
-                </motion.div>
-            ))
+                </motion.li>
+            )})
         );
     };
 
     return (
         <nav className={styles.menu} role="navigation">
+            {announce && <span role="log" className="visuallyHidden">{announce == 'opened' ? 'развернуто' : 'свернуто'}</span>}
             {buildFirstLevel()}
         </nav>
     );
