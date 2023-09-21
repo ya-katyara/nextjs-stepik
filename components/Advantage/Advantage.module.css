@@ -1,16 +1,18 @@
 .advantage {
 	display: grid;
+	align-items: center;
+
+	margin-bottom: 30px;
 	grid-template-columns: 50px 1fr;
 	gap: 17px 40px;
-	margin-bottom: 30px;
-	align-items: center;
 }
 
 .bar {
 	width: 1px;
-	background: var(--grey-light);
 	height: 100%;
 	margin: 0 auto;
+
+	background: var(--grey-light);
 }
 
 .title {
