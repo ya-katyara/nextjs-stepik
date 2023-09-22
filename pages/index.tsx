@@ -1,5 +1,5 @@
 import { GetStaticProps } from "next";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Htag } from "../components";
 import Button from "../components/Button/Button";
 import Paragraph from "../components/Paragraph/Paragraph";
@@ -12,28 +12,15 @@ import Input from "../components/Input/Input";
 import Textarea from "../components/Textarea/Textarea";
 import { API } from "../helpers/api";
 
-function Home({ menu }: HomeProps): JSX.Element {
-    const [counter, setCounter] = useState<number>(0);
+function Home(): JSX.Element {
     const [rating, setRating] = useState<number>(4);
-
-    useEffect(() => {
-        console.log("Counter " + counter);
-    });
 
     return (
         <>
-            <Htag tag="h1">{counter}</Htag>
-            <Button
-                appearance="primary"
-                arrow="right"
-                onClick={(): void => setCounter((x) => x + 1)}
-            >
-                Кнопка
-            </Button>
-            <Button appearance="ghost" arrow="down">
-                Кнопка
-            </Button>
-            <Paragraph size="small">aaaaaaaaaaaaaaaaaaaaaaaaa</Paragraph>
+            <Htag tag="h1">Заголовок</Htag>
+            <Button appearance="primary" arrow="right">Кнопка</Button>
+            <Button appearance="ghost" arrow="down">Кнопка</Button>
+            <Paragraph size="small">Маленький текст</Paragraph>
             <Tag size="s" color="red">
                 Red
             </Tag>
@@ -45,7 +32,7 @@ function Home({ menu }: HomeProps): JSX.Element {
             </Tag>
             <Rating rating={rating} isEditable setRating={setRating} />
             <Input placeholder="test" />
-            <Textarea placeholder="test" />
+            <Textarea placeholder="test area" />
         </>
     );
 }

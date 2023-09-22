@@ -1,7 +1,6 @@
 import React, { ForwardedRef, forwardRef, useRef, useState } from "react";
 import styles from "./Product.module.css";
 import { ProductProps } from "./Product.props";
-import cn from "classnames";
 import Card from "../Card/Card";
 import Rating from "../Rating/Rating";
 import Tag from "../Tag/Tag";

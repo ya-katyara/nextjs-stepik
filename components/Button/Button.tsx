@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styles from "./Button.module.css";
 import { ButtonProps } from "./Button.props";
 import ArrowIcon from "./arrow.svg";
@@ -14,9 +14,9 @@ const Button = ({
 }: ButtonProps): JSX.Element => {
     const scale = useMotionValue(1);
 
-    useEffect(() => {
-        scale.onChange((s) => console.log(s));
-    }, []);
+    // useEffect(() => {
+    //     scale.onChange((s) => console.log(s));
+    // }, [scale]);
 
     return (
         <motion.button

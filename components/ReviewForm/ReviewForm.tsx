@@ -17,7 +17,7 @@ const ReviewForm = ({ productId, isOpened, className, ...props }: ReviewFormProp
     const [isSuccess, setIsSuccess] = useState<boolean>(false);
     const [error, setError] = useState<string>();
 
-    const onSubmit = async (formData: IReviewForm) => {
+    const onSubmit = async (formData: IReviewForm): Promise<void> => {
         try {
             const { data } = await axios.post<IReviewSentResponse>(API.review.createDemo, {...formData, productId});
             if (data.message) {

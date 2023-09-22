@@ -11,7 +11,7 @@ import { API } from "../../helpers/api";
 import Head from 'next/head';
 
 function TopPage({ firstCategory, page, products }: TopPageProps): JSX.Element {
-    return (<>
+    return (page && products && <>
         <Head>
             <title>{page.metaTitle}</title>
             <meta name="description" content={page.metaDescription} />
