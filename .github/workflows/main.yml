@@ -16,6 +16,6 @@ jobs:
         with:
           registry: docker.pkg.github.com
           name: docker.pkg.github.com/ya-katyara/nextjs-stepik/nextjs-stepik
-          username: ${{ secrets.DOCKER_USERNAME }}
+          username: ${{ github.actor }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           tags: "develop"
